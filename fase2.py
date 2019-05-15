@@ -13,6 +13,8 @@
 #FECHA DE ENTREGA: 16/05/2019
 
 import tkinter as tk
+import psycopg2
+from psycopg2 import Error
 
 
 #FUNCIONES
@@ -102,7 +104,7 @@ def mostrarVentanaClientes():
     
     nitFrame.pack(side=tk.TOP, anchor=tk.NW)
 
-    #NIT
+    #BOTONES
     registrarborrarFrame = tk.Frame(ventanaClientes, bg="dodger blue")
     
     button4 = tk.Button(registrarborrarFrame, text="REGISTRAR", command=mostrarVentanaClientes, bg="green")
@@ -126,6 +128,70 @@ def mostrarVentanaProductos():
     label3.config(font=("Courier", 44), pady=40)
     label3.pack()
 
+    label6 = tk.Label(ventanaProductos, text="REGISTRAR NUEVO PRODUCTO", bg="dodger blue", fg="black")
+    label6.config(font=("Courier", 24))
+    label6.pack(side=tk.TOP, anchor=tk.NW)
+
+    #NOMBRE
+    nombreFrame = tk.Frame(ventanaProductos)
+    
+    label12 = tk.Label(nombreFrame, text="Nombre:", bg="dodger blue", fg="black")
+    label12.config(font=("Courier", 12))
+    label12.pack(side=tk.LEFT)
+
+    edit7 = tk.Text(nombreFrame, width=30, height=1)
+    edit7.pack(side=tk.LEFT)
+    nombreFrame.pack(side=tk.TOP, anchor=tk.NW)
+
+    #DESCRIPCION
+    descripcionFrame = tk.Frame(ventanaProductos)
+    
+    label13 = tk.Label(descripcionFrame, text="Descripcion:", bg="dodger blue", fg="black")
+    label13.config(font=("Courier", 12))
+    label13.pack(side=tk.LEFT)
+
+    edit8 = tk.Text(descripcionFrame, width=70, height=1)
+    edit8.pack(side=tk.LEFT)
+    
+    descripcionFrame.pack(side=tk.TOP, anchor=tk.NW)
+
+    #CATEGORIA
+    categoriaFrame = tk.Frame(ventanaProductos)
+    
+    label14 = tk.Label(categoriaFrame, text="Categoria:", bg="dodger blue", fg="black")
+    label14.config(font=("Courier", 12))
+    label14.pack(side=tk.LEFT)
+
+    edit9 = tk.Text(categoriaFrame, width=30, height=1)
+    edit9.pack(side=tk.LEFT)
+    
+    categoriaFrame.pack(side=tk.TOP, anchor=tk.NW)
+
+    #PRECIO
+    precioFrame = tk.Frame(ventanaProductos)
+    
+    label15 = tk.Label(precioFrame, text="Precio:", bg="dodger blue", fg="black")
+    label15.config(font=("Courier", 12))
+    label15.pack(side=tk.LEFT)
+
+    edit10 = tk.Text(precioFrame, width=15, height=1)
+    edit10.pack(side=tk.LEFT)
+    
+    precioFrame.pack(side=tk.TOP, anchor=tk.NW)
+
+    #BOTONES
+    registrarborrarFrame = tk.Frame(ventanaProductos, bg="dodger blue")
+    
+    button6 = tk.Button(registrarborrarFrame, text="REGISTRAR", command=mostrarVentanaClientes, bg="green")
+    button6.config(font=("Courier", 20))
+    button6.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
+
+    button7 = tk.Button(registrarborrarFrame, text="BORRAR", command=mostrarVentanaClientes, bg="red")
+    button7.config(font=("Courier", 20))
+    button7.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
+    
+    registrarborrarFrame.pack(side=tk.TOP, anchor=tk.NW)
+
 def mostrarVentanaVentas():
     ventanaVentas = tk.Tk()
     ventanaVentas.title("VENTAS")
@@ -136,6 +202,81 @@ def mostrarVentanaVentas():
     label4 = tk.Label(ventanaVentas, text="VENTAS", bg="dodger blue", fg="black")
     label4.config(font=("Courier", 44), pady=40)
     label4.pack()
+
+    label7 = tk.Label(ventanaVentas, text="FACTURAR", bg="dodger blue", fg="black")
+    label7.config(font=("Courier", 24))
+    label7.pack(side=tk.TOP, anchor=tk.NW)
+
+    #NIT
+    nitFrame = tk.Frame(ventanaVentas)
+    
+    label18 = tk.Label(nitFrame, text="NIT:", bg="dodger blue", fg="black")
+    label18.config(font=("Courier", 12))
+    label18.pack(side=tk.LEFT)
+
+    edit11 = tk.Text(nitFrame, width=30, height=1)
+    edit11.pack(side=tk.LEFT)
+    nitFrame.pack(side=tk.TOP, anchor=tk.NW)
+
+    #NOMBRE
+    nombreFrame = tk.Frame(ventanaVentas)
+    
+    label19 = tk.Label(nombreFrame, text="Nombre:", bg="dodger blue", fg="black")
+    label19.config(font=("Courier", 12))
+    label19.pack(side=tk.LEFT)
+
+    edit12 = tk.Text(nombreFrame, width=30, height=1)
+    edit12.pack(side=tk.LEFT)
+    nombreFrame.pack(side=tk.TOP, anchor=tk.NW)
+
+    #DESCRIPCION
+    descripcionFrame = tk.Frame(ventanaProductos)
+    
+    label13 = tk.Label(descripcionFrame, text="Descripcion:", bg="dodger blue", fg="black")
+    label13.config(font=("Courier", 12))
+    label13.pack(side=tk.LEFT)
+
+    edit8 = tk.Text(descripcionFrame, width=70, height=1)
+    edit8.pack(side=tk.LEFT)
+    
+    descripcionFrame.pack(side=tk.TOP, anchor=tk.NW)
+
+    #CATEGORIA
+    categoriaFrame = tk.Frame(ventanaProductos)
+    
+    label14 = tk.Label(categoriaFrame, text="Categoria:", bg="dodger blue", fg="black")
+    label14.config(font=("Courier", 12))
+    label14.pack(side=tk.LEFT)
+
+    edit9 = tk.Text(categoriaFrame, width=30, height=1)
+    edit9.pack(side=tk.LEFT)
+    
+    categoriaFrame.pack(side=tk.TOP, anchor=tk.NW)
+
+    #PRECIO
+    precioFrame = tk.Frame(ventanaProductos)
+    
+    label15 = tk.Label(precioFrame, text="Precio:", bg="dodger blue", fg="black")
+    label15.config(font=("Courier", 12))
+    label15.pack(side=tk.LEFT)
+
+    edit10 = tk.Text(precioFrame, width=15, height=1)
+    edit10.pack(side=tk.LEFT)
+    
+    precioFrame.pack(side=tk.TOP, anchor=tk.NW)
+
+    #BOTONES
+    registrarborrarFrame = tk.Frame(ventanaProductos, bg="dodger blue")
+    
+    button6 = tk.Button(registrarborrarFrame, text="REGISTRAR", command=mostrarVentanaClientes, bg="green")
+    button6.config(font=("Courier", 20))
+    button6.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
+
+    button7 = tk.Button(registrarborrarFrame, text="BORRAR", command=mostrarVentanaClientes, bg="red")
+    button7.config(font=("Courier", 20))
+    button7.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
+    
+    registrarborrarFrame.pack(side=tk.TOP, anchor=tk.NW)
     
 
 ################################################################################
