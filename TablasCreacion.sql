@@ -1,0 +1,73 @@
+CREATE TABLE Vendedor
+(
+    IDVendedor VARCHAR(20) NOT NULL,
+	Nombre VARCHAR(40) NOT NULL,
+	Direccion VARCHAR(80) NOT NULL,
+	Telefono VARCHAR(10) NOT NULL,
+	Salario VARCHAR(20) NOT NULL,
+	FechaContratacion VARCHAR(20) NOT NULL,
+	Puesto VARCHAR(20) NOT NULL,
+	Sexo VARCHAR(1) NOT NULL,
+	FechaNac VARCHAR(20) NOT NULL,
+    CONSTRAINT PK_Vendedor PRIMARY KEY (IDVendedor)
+);
+
+CREATE TABLE Cliente
+(
+    Sexo VARCHAR(1) NOT NULL,
+	Nit VARCHAR(20) NOT NULL,
+	Telefono VARCHAR(10) NOT NULL,
+    Direccion VARCHAR(80) NOT NULL,
+	Nombre VARCHAR(40) NOT NULL,
+	FechaNac VARCHAR(20) NOT NULL,
+    CONSTRAINT PK_Cliente PRIMARY KEY (Nit)
+);
+
+CREATE TABLE Facturas
+(
+    Nombre VARCHAR(40) NOT NULL,
+	NumFactura VARCHAR(20) NOT NULL,
+    Direccion VARCHAR(80) NOT NULL,
+	Fecha VARCHAR(20) NOT NULL,
+	Nit VARCHAR(20) NOT NULL,
+	IDVendedor VARCHAR(20) NOT NULL,
+    CONSTRAINT PK_Facturas PRIMARY KEY (NumFactura),
+	FOREIGN KEY (Nit) REFERENCES Cliente(Nit),
+	FOREIGN KEY (IDVendedor) REFERENCES Vendedor(IDVendedor)
+);
+
+
+CREATE TABLE Marca
+(
+   	Nombre VARCHAR(20) NOT NULL,
+    IDMarca VARCHAR(20) NOT NULL,
+    CONSTRAINT PK_Marca PRIMARY KEY (IDMarca)
+);
+
+CREATE TABLE Categoria
+(
+   	Nombre VARCHAR(20) NOT NULL,
+    IDCategoria VARCHAR(20) NOT NULL,
+    CONSTRAINT PK_Categoria PRIMARY KEY (IDCategoria)
+);
+
+CREATE TABLE Producto
+(
+    IDProducto VARCHAR(10) NOT NULL,
+	Precio VARCHAR(10) NOT NULL,
+	Nombre VARCHAR(20) NOT NULL,
+    IDMarca VARCHAR(20) NOT NULL,
+	IDCategoria VARCHAR(20) NOT NULL,
+    CONSTRAINT PK_Producto PRIMARY KEY (IDProducto),
+	FOREIGN KEY (IDMarca) REFERENCES Marca(IDMarca),
+	FOREIGN KEY (IDCategoria) REFERENCES Categoria(IDCategoria)
+);
+
+CREATE TABLE Compras
+(
+    NumFactura VARCHAR(1) NOT NULL,
+	Cantidad VARCHAR(5) NOT NULL,
+	IDproducto VARCHAR(10) NOT NULL,
+    Total VARCHAR(80) NOT NULL,
+	FOREIGN KEY (IDProducto) REFERENCES Producto(IDProducto)
+);
