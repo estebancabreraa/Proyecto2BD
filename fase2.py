@@ -15,10 +15,109 @@
 import tkinter as tk
 import psycopg2
 from psycopg2 import Error
+from random import randint
+
+
+'''
+Conexion en computadora de Esteban Cabrera:
+        user = "postgres",
+        password = "esteban1998",
+        host = "127.0.0.1",
+        port = "5433",
+        database = "BDPROYECTO2"
+'''
+
+'''
+Conexion en computadora de Raul Monzon:
+        user = "postgres",
+        password = "esteban1998",
+        host = "127.0.0.1",
+        port = "5432",
+        database = "tienda"
+'''
+
+def insertarCliente(sexo, nit, telefono, direccion, nombre, fechanac):
+    try:
+    
+        connection = psycopg2.connect(user = "postgres",
+                                      password = "esteban1998",
+                                      host = "127.0.0.1",
+                                      port = "5432",
+                                      database = "tienda")
+        cursor = connection.cursor()
+        
+        create_table_query = '''INSERT INTO Cliente(Sexo, Nit, Telefono, Direccion, Nombre, FechaNac) VALUES(%s, %s, %s, %s, %s, %s);'''
+        
+        cursor.execute(create_table_query, (sexo, nit, telefono, direccion, nombre, fechanac))
+        
+        connection.commit()
+        
+        print("Registro exitoso!")
+    except (Exception, psycopg2.DatabaseError) as error :
+        print ("No se pudo registrar cliente.", error)
+    finally:
+        #closing database connection.
+            if(connection):
+                cursor.close()
+                connection.close()
+                print("PostgreSQL connection is closed")
+
+def insertarProducto(nombre, precio, marca, categoria):
+    try:
+
+        IDMarca = ''
+        IDCategoria = ''
+        
+        connection = psycopg2.connect(user = "postgres",
+                                      password = "esteban1998",
+                                      host = "127.0.0.1",
+                                      port = "5432",
+                                      database = "tienda")
+        cursor = connection.cursor()
+
+        create_table_query = '''SELECT * FROM Marca WHERE Nombre = %s;'''
+
+        cursor.execute(create_table_query, (marca.upper(),))
+
+        resultado = cursor.fetchall()
+
+        
+        for row in resultado:
+            IDMarca = row[1]
+
+        create_table_query = '''SELECT * FROM Categoria WHERE Nombre = %s;'''
+
+        cursor.execute(create_table_query, (categoria.upper(),))
+
+        resultado = cursor.fetchall()
+
+        for row in resultado:
+            IDCategoria = row[1]
+
+        IDProducto = randint(100000, 999999)
+        print(IDProducto)
+        
+        create_table_query = '''INSERT INTO Producto(IDProducto, Precio, Nombre, IDMarca, IDCategoria) VALUES(%s, %s, %s, %s, %s);'''
+        
+        cursor.execute(create_table_query, (IDProducto, precio, nombre, IDMarca, IDCategoria))
+        
+        connection.commit()
+        
+        print("Registro exitoso!")
+    except (Exception, psycopg2.DatabaseError) as error :
+        print ("No se pudo registrar producto.", error)
+    finally:
+        #closing database connection.
+            if(connection):
+                cursor.close()
+                connection.close()
+                print("PostgreSQL connection is closed")
+
 
 
 #FUNCIONES
 def mostrarVentanaClientes():
+        
     ventanaClientes = tk.Tk()
     ventanaClientes.title("CLIENTES")
     ventanaClientes.geometry("800x600")
@@ -104,18 +203,29 @@ def mostrarVentanaClientes():
     
     nitFrame.pack(side=tk.TOP, anchor=tk.NW)
 
+    def registrarCliente():
+        vNombre = edit1.get("1.0",'end-1c')
+        vFecha = edit2.get("1.0",'end-1c')
+        vSexo = edit3.get("1.0",'end-1c')
+        vDireccion = edit4.get("1.0",'end-1c')
+        vTelefono = edit5.get("1.0",'end-1c')
+        vNit = edit6.get("1.0",'end-1c')
+
+        insertarCliente(vSexo, vNit, vTelefono, vDireccion, vNombre, vFecha)
+
     #BOTONES
     registrarborrarFrame = tk.Frame(ventanaClientes, bg="dodger blue")
     
-    button4 = tk.Button(registrarborrarFrame, text="REGISTRAR", command=mostrarVentanaClientes, bg="green")
+    button4 = tk.Button(registrarborrarFrame, text="REGISTRAR", command=registrarCliente, bg="green")
     button4.config(font=("Courier", 20))
     button4.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
 
-    button5 = tk.Button(registrarborrarFrame, text="BORRAR", command=mostrarVentanaClientes, bg="red")
+    button5 = tk.Button(registrarborrarFrame, text="BORRAR", command=registrarCliente, bg="red")
     button5.config(font=("Courier", 20))
     button5.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
     
     registrarborrarFrame.pack(side=tk.TOP, anchor=tk.NW)
+
 
 def mostrarVentanaProductos():
     ventanaProductos = tk.Tk()
@@ -143,17 +253,17 @@ def mostrarVentanaProductos():
     edit7.pack(side=tk.LEFT)
     nombreFrame.pack(side=tk.TOP, anchor=tk.NW)
 
-    #DESCRIPCION
-    descripcionFrame = tk.Frame(ventanaProductos)
+    #MARCA
+    marcaFrame = tk.Frame(ventanaProductos)
     
-    label13 = tk.Label(descripcionFrame, text="Descripcion:", bg="dodger blue", fg="black")
+    label13 = tk.Label(marcaFrame, text="Marca:", bg="dodger blue", fg="black")
     label13.config(font=("Courier", 12))
     label13.pack(side=tk.LEFT)
 
-    edit8 = tk.Text(descripcionFrame, width=70, height=1)
+    edit8 = tk.Text(marcaFrame, width=40, height=1)
     edit8.pack(side=tk.LEFT)
     
-    descripcionFrame.pack(side=tk.TOP, anchor=tk.NW)
+    marcaFrame.pack(side=tk.TOP, anchor=tk.NW)
 
     #CATEGORIA
     categoriaFrame = tk.Frame(ventanaProductos)
@@ -179,10 +289,18 @@ def mostrarVentanaProductos():
     
     precioFrame.pack(side=tk.TOP, anchor=tk.NW)
 
+    def registrarProducto():
+        vNombre = edit7.get("1.0",'end-1c')
+        vMarca = edit8.get("1.0",'end-1c')
+        vCategoria = edit9.get("1.0",'end-1c')
+        vPrecio = edit10.get("1.0",'end-1c')
+
+        insertarProducto(vNombre, vPrecio, vMarca, vCategoria)
+        
     #BOTONES
     registrarborrarFrame = tk.Frame(ventanaProductos, bg="dodger blue")
     
-    button6 = tk.Button(registrarborrarFrame, text="REGISTRAR", command=mostrarVentanaClientes, bg="green")
+    button6 = tk.Button(registrarborrarFrame, text="REGISTRAR", command=registrarProducto, bg="green")
     button6.config(font=("Courier", 20))
     button6.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
 
@@ -293,5 +411,6 @@ button2.pack(pady=10)
 button3 = tk.Button(gui, text="Ventas", command=mostrarVentanaVentas)
 button3.config(font=("Courier", 20))
 button3.pack(pady=10, ipadx=24)
+
 
 gui.mainloop()
