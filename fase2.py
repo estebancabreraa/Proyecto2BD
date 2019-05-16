@@ -203,9 +203,9 @@ def mostrarVentanaVentas():
     label4.config(font=("Courier", 44), pady=40)
     label4.pack()
 
-    label7 = tk.Label(ventanaVentas, text="FACTURAR", bg="dodger blue", fg="black")
-    label7.config(font=("Courier", 24))
-    label7.pack(side=tk.TOP, anchor=tk.NW)
+    label16 = tk.Label(ventanaVentas, text="FACTURAR", bg="dodger blue", fg="black")
+    label16.config(font=("Courier", 24))
+    label16.pack(side=tk.TOP, anchor=tk.NW)
 
     #NIT
     nitFrame = tk.Frame(ventanaVentas)
@@ -229,52 +229,42 @@ def mostrarVentanaVentas():
     edit12.pack(side=tk.LEFT)
     nombreFrame.pack(side=tk.TOP, anchor=tk.NW)
 
-    #DESCRIPCION
-    descripcionFrame = tk.Frame(ventanaProductos)
+    #FECHA
+    fechaFrame = tk.Frame(ventanaVentas)
     
-    label13 = tk.Label(descripcionFrame, text="Descripcion:", bg="dodger blue", fg="black")
-    label13.config(font=("Courier", 12))
-    label13.pack(side=tk.LEFT)
+    label20 = tk.Label(fechaFrame, text="Fecha:", bg="dodger blue", fg="black")
+    label20.config(font=("Courier", 12))
+    label20.pack(side=tk.LEFT)
 
-    edit8 = tk.Text(descripcionFrame, width=70, height=1)
-    edit8.pack(side=tk.LEFT)
+    edit13 = tk.Text(fechaFrame, width=15, height=1)
+    edit13.pack(side=tk.LEFT)
     
-    descripcionFrame.pack(side=tk.TOP, anchor=tk.NW)
+    fechaFrame.pack(side=tk.TOP, anchor=tk.NW)
 
-    #CATEGORIA
-    categoriaFrame = tk.Frame(ventanaProductos)
+    #VENDEDOR
+    vendedorFrame = tk.Frame(ventanaVentas)
     
-    label14 = tk.Label(categoriaFrame, text="Categoria:", bg="dodger blue", fg="black")
-    label14.config(font=("Courier", 12))
-    label14.pack(side=tk.LEFT)
+    label21 = tk.Label(vendedorFrame, text="Nombre vendedor:", bg="dodger blue", fg="black")
+    label21.config(font=("Courier", 12))
+    label21.pack(side=tk.LEFT)
 
-    edit9 = tk.Text(categoriaFrame, width=30, height=1)
-    edit9.pack(side=tk.LEFT)
+    edit14 = tk.Text(vendedorFrame, width=60, height=1)
+    edit14.pack(side=tk.LEFT)
     
-    categoriaFrame.pack(side=tk.TOP, anchor=tk.NW)
+    vendedorFrame.pack(side=tk.TOP, anchor=tk.NW)
 
-    #PRECIO
-    precioFrame = tk.Frame(ventanaProductos)
     
-    label15 = tk.Label(precioFrame, text="Precio:", bg="dodger blue", fg="black")
-    label15.config(font=("Courier", 12))
-    label15.pack(side=tk.LEFT)
-
-    edit10 = tk.Text(precioFrame, width=15, height=1)
-    edit10.pack(side=tk.LEFT)
-    
-    precioFrame.pack(side=tk.TOP, anchor=tk.NW)
 
     #BOTONES
-    registrarborrarFrame = tk.Frame(ventanaProductos, bg="dodger blue")
+    registrarborrarFrame = tk.Frame(ventanaVentas, bg="dodger blue")
     
-    button6 = tk.Button(registrarborrarFrame, text="REGISTRAR", command=mostrarVentanaClientes, bg="green")
-    button6.config(font=("Courier", 20))
-    button6.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
+    button8 = tk.Button(registrarborrarFrame, text="REGISTRAR", command=mostrarVentanaClientes, bg="green")
+    button8.config(font=("Courier", 20))
+    button8.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
 
-    button7 = tk.Button(registrarborrarFrame, text="BORRAR", command=mostrarVentanaClientes, bg="red")
-    button7.config(font=("Courier", 20))
-    button7.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
+    button9 = tk.Button(registrarborrarFrame, text="BORRAR", command=mostrarVentanaClientes, bg="red")
+    button9.config(font=("Courier", 20))
+    button9.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
     
     registrarborrarFrame.pack(side=tk.TOP, anchor=tk.NW)
     
