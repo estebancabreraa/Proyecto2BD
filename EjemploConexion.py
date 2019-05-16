@@ -6,15 +6,7 @@ Conexion en computadora de Raul Monzon:
         password = "raul1998",
         host = "127.0.0.1",
         port = "5433",
-        database = "postgres"
-        
-Conexion en computadora de Esteban Cabrera: 
-        user = "postgres",
-        password = "       ",
-        host = "127.0.0.1",
-        port = "5432",
-        database = "postgres"
-        
+        database = "BDPROYECTO2"
 """
 try:
     
@@ -22,7 +14,7 @@ try:
                                   password = "raul1998",
                                   host = "127.0.0.1",
                                   port = "5433",
-                                  database = "postgres")
+                                  database = "BDPROYECTO2")
     cursor = connection.cursor()
     
     create_table_query = '''CREATE TABLE mobile
