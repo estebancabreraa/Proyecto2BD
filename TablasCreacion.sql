@@ -32,7 +32,6 @@ CREATE TABLE Facturas
 	Fecha VARCHAR(20) NOT NULL,
 	Nit VARCHAR(20) NOT NULL,
 	IDVendedor VARCHAR(20) NOT NULL,
-    CONSTRAINT PK_Facturas PRIMARY KEY (NumFactura),
 	FOREIGN KEY (Nit) REFERENCES Cliente(Nit),
 	FOREIGN KEY (IDVendedor) REFERENCES Vendedor(IDVendedor)
 );
@@ -66,7 +65,8 @@ CREATE TABLE Producto
 
 CREATE TABLE Compras
 (
-    NumFactura VARCHAR(1) NOT NULL,
+    NumFactura VARCHAR(20) NOT NULL,
+	Sucursal VARCHAR(1) NOT NULL,
 	Cantidad VARCHAR(5) NOT NULL,
 	IDproducto VARCHAR(10) NOT NULL,
     Total VARCHAR(80) NOT NULL,
