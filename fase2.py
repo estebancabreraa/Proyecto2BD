@@ -13,6 +13,7 @@
 #FECHA DE ENTREGA: 16/05/2019
 
 import tkinter as tk
+from tkinter import messagebox
 import psycopg2
 from psycopg2 import Error
 from random import randint
@@ -33,8 +34,188 @@ Conexion en computadora de Raul Monzon:
         password = "esteban1998",
         host = "127.0.0.1",
         port = "5432",
-        database = "tienda"
+        database = "tiendaFinal"
 '''
+#def simulacionClientes(cant):
+def simulacionCompras(cantFacturas,fecha):
+    try:
+    
+        connection = psycopg2.connect(user = "postgres",
+                                      password = "esteban1998",
+                                      host = "127.0.0.1",
+                                      port = "5432",
+                                      database = "tiendaFinal")
+        cursor = connection.cursor()
+        clientesList=("Raul Monzon","Kevin Macario","Esteban Cabrera","Miguel Valle","Gustavo de Leon","Alan Do Santos","Camila Ahuat","Luis Salazar","Luis Esturban")
+        nitList=("123456789-00","123456789-01","123456789-04","123456789-02","123456789-03","123456789-05","123456789-06","123456789-07")
+        sucursales=["a","b","c","d","e","f","g","h","i","j","k","l"]
+        idProductosList=["123456","123457","123484","123459","123450"]
+        
+        
+        for i in range(cantFacturas):
+
+            
+            NumFactura=randint(100000, 999999)
+            indexSuc=randint(0,10)
+            cantidad=randint(0,10)
+            indexPro=randint(0,4)
+            indexCli=randint(1,6)
+            direccion=("Ciudad")
+            total=randint(10,100)
+            create_table_query = '''INSERT INTO Compras(NumFactura, Sucursal, Cantidad, IDProducto, Total) VALUES(%s, %s, %s, %s, %s);'''
+            cursor.execute(create_table_query, (NumFactura, sucursales[indexSuc], randint(0,10), idProductosList[indexPro], total))
+            
+            create_table_query = '''INSERT INTO Facturas(Nombre, NumFactura, Direccion, Sucursal,Fecha, Nit, IDVendedor) VALUES(%s, %s, %s, %s, %s, %s, %s);'''
+            cursor.execute(create_table_query, (clientesList[indexCli], NumFactura, "ciudad", sucursales[indexSuc], fecha, nitList[indexCli], 123456))
+            
+            connection.commit()
+        
+        messagebox.showinfo(message="Se ha registrado la simulacion exitosamente.", title="Registro")
+    except (Exception, psycopg2.DatabaseError) as error :
+        messagebox.showerror(message="No se pudo registrar la simulacion..", title="Registro fallido")
+        print ("No se pudo registrar cliente.", error)
+    finally:
+        #closing database connection.
+            if(connection):
+                cursor.close()
+                connection.close()
+                print("PostgreSQL connection is closed")
+    
+
+def buscarCliente(nombre):
+    try:
+    
+        connection = psycopg2.connect(user = "postgres",
+                                      password = "esteban1998",
+                                      host = "127.0.0.1",
+                                      port = "5432",
+                                      database = "tiendaFinal")
+        cursor = connection.cursor()
+        
+        create_table_query = '''SELECT * FROM Cliente WHERE Nombre=%s;'''
+        
+        cursor.execute(create_table_query, (nombre,))
+
+        result = cursor.fetchall()
+
+        nit = ""
+        sexo = ""
+        telefono = ""
+        direccion = ""
+        fechanac = ""
+        
+        
+        for row in result:
+            sexo = row[0]
+            nit = row[1]
+            telefono = row[2]
+            direccion = row[3]
+            fechanac = row[5]
+            
+            
+        
+        connection.commit()
+        
+        mensaje = "NIT: " + nit + ".\n" + "Nombre: " + nombre + ".\n" + "Direccion: " + direccion + ".\n" + "Telefono: " + telefono + ".\n" + "Fecha de nacimiento: " + fechanac + ".\n" + "Sexo: " + sexo + ".\n"
+        
+        messagebox.showinfo(message=mensaje, title="Consulta")
+    except (Exception, psycopg2.DatabaseError) as error :
+        messagebox.showerror(message="No se encontro el cliente.", title="Consulta fallida")
+        print ("No se pudo registrar cliente.", error)
+    finally:
+        #closing database connection.
+            if(connection):
+                cursor.close()
+                connection.close()
+                print("PostgreSQL connection is closed")
+
+
+def buscarProducto(nombre):
+    try:
+    
+        connection = psycopg2.connect(user = "postgres",
+                                      password = "esteban1998",
+                                      host = "127.0.0.1",
+                                      port = "5432",
+                                      database = "tiendaFinal")
+        cursor = connection.cursor()
+        
+        create_table_query = '''SELECT * FROM Producto WHERE Nombre=%s;'''
+        
+        cursor.execute(create_table_query, (nombre.upper(),))
+
+        result = cursor.fetchall()
+
+        idproducto =""
+        precio = ""
+        
+        
+        for row in result:
+            idproducto = row[0]
+            precio = row[1]
+            
+        
+        connection.commit()
+        
+        mensaje = "ID: " + idproducto + ".\n" + "Nombre: " + nombre + ".\n" + "Precio: " + precio + ".\n"
+        
+        messagebox.showinfo(message=mensaje, title="Consulta")
+    except (Exception, psycopg2.DatabaseError) as error :
+        messagebox.showerror(message="No se encontro el producto.", title="Consulta fallida")
+        print ("No se pudo registrar cliente.", error)
+    finally:
+        #closing database connection.
+            if(connection):
+                cursor.close()
+                connection.close()
+                print("PostgreSQL connection is closed")
+
+def buscarFactura(numero):
+    try:
+    
+        connection = psycopg2.connect(user = "postgres",
+                                      password = "esteban1998",
+                                      host = "127.0.0.1",
+                                      port = "5432",
+                                      database = "tiendaFinal")
+        cursor = connection.cursor()
+        
+        create_table_query = '''SELECT * FROM Facturas WHERE NumFactura= %s;'''
+        
+        cursor.execute(create_table_query, (numero,))
+
+        result = cursor.fetchall()
+
+        direccion = ""
+        nombre = ""
+        sucursal = ""
+        fecha = ""
+        nit = ""
+        fecha = ""
+        
+        for row in result:
+            nombre = row[0]
+            direccion = row[2]
+            sucursal = row[3]
+            fecha = row[4]
+            nit = row[5]
+        
+        connection.commit()
+        
+        mensaje = "ID: " + numero + ".\n" + "Nombre: " + nombre + ".\n" + "Nit: " + nit + ".\n" + "Direccion: " + direccion + ".\n" + "Sucursal: " + sucursal + ".\n"  + "Fecha: " + fecha + ".\n"
+        
+        messagebox.showinfo(message=mensaje, title="Consulta")
+    except (Exception, psycopg2.DatabaseError) as error :
+        messagebox.showerror(message="No se encontro la factura.", title="Consulta fallida")
+        print ("No se pudo registrar cliente.", error)
+    finally:
+        #closing database connection.
+            if(connection):
+                cursor.close()
+                connection.close()
+                print("PostgreSQL connection is closed")
+
+
 
 def insertarCliente(sexo, nit, telefono, direccion, nombre, fechanac):
     try:
@@ -43,7 +224,7 @@ def insertarCliente(sexo, nit, telefono, direccion, nombre, fechanac):
                                       password = "esteban1998",
                                       host = "127.0.0.1",
                                       port = "5432",
-                                      database = "tienda")
+                                      database = "tiendaFinal")
         cursor = connection.cursor()
         
         create_table_query = '''INSERT INTO Cliente(Sexo, Nit, Telefono, Direccion, Nombre, FechaNac) VALUES(%s, %s, %s, %s, %s, %s);'''
@@ -52,8 +233,9 @@ def insertarCliente(sexo, nit, telefono, direccion, nombre, fechanac):
         
         connection.commit()
         
-        print("Registro exitoso!")
+        messagebox.showinfo(message="Se ha registrado el cliente exitosamente.", title="Registro")
     except (Exception, psycopg2.DatabaseError) as error :
+        messagebox.showerror(message="No se pudo registrar el cliente..", title="Registro fallido")
         print ("No se pudo registrar cliente.", error)
     finally:
         #closing database connection.
@@ -72,7 +254,7 @@ def insertarProducto(nombre, precio, marca, categoria):
                                       password = "esteban1998",
                                       host = "127.0.0.1",
                                       port = "5432",
-                                      database = "tienda")
+                                      database = "tiendaFinal")
         cursor = connection.cursor()
 
         create_table_query = '''SELECT * FROM Marca WHERE Nombre = %s;'''
@@ -94,17 +276,34 @@ def insertarProducto(nombre, precio, marca, categoria):
         for row in resultado:
             IDCategoria = row[1]
 
+
         IDProducto = randint(100000, 999999)
-        print(IDProducto)
+
+        if (len(IDMarca) < 1):
+            IDMarca = randint(100000, 999999);
+            
+            create_table_query = '''INSERT INTO Marca(Nombre, IDMarca) VALUES(%s, %s);'''
+            
+            cursor.execute(create_table_query, (marca.upper(), IDMarca))
+
+        if (len(IDCategoria) < 1):
+            IDCategoria = randint(100000, 999999);
+            
+            create_table_query = '''INSERT INTO Categoria(Nombre, IDCategoria) VALUES(%s, %s);'''
+            
+            cursor.execute(create_table_query, (categoria.upper(), IDCategoria))
+            
+        
         
         create_table_query = '''INSERT INTO Producto(IDProducto, Precio, Nombre, IDMarca, IDCategoria) VALUES(%s, %s, %s, %s, %s);'''
         
-        cursor.execute(create_table_query, (IDProducto, precio, nombre, IDMarca, IDCategoria))
+        cursor.execute(create_table_query, (IDProducto, precio, nombre.upper(), IDMarca, IDCategoria))
         
         connection.commit()
         
-        print("Registro exitoso!")
+        messagebox.showinfo(message="Se ha registrado el producto exitosamente.", title="Registro")
     except (Exception, psycopg2.DatabaseError) as error :
+        messagebox.showerror(message="No se pudo registrar el cliente..", title="Registro fallido")
         print ("No se pudo registrar producto.", error)
     finally:
         #closing database connection.
@@ -113,7 +312,77 @@ def insertarProducto(nombre, precio, marca, categoria):
                 connection.close()
                 print("PostgreSQL connection is closed")
 
+def insertarFacturaCompra(nit, nombreCliente, fecha, sucursal, nombreVendedor, nombreSucursal, cantidad, nombreProducto):
+    try:
+        connection = psycopg2.connect(user = "postgres",
+                                      password = "esteban1998",
+                                      host = "127.0.0.1",
+                                      port = "5432",
+                                      database = "tiendaFinal")
+        cursor = connection.cursor()
+        #####
+        create_table_query = '''SELECT * FROM Vendedor WHERE Nombre = %s;'''
 
+        cursor.execute(create_table_query, (nombreVendedor,))
+
+        resultado = cursor.fetchall()
+
+        IDVendedor = ""
+        
+        for row in resultado:
+            IDVendedor = row[0]
+
+        if (len(IDVendedor) < 1):
+            IDVendedor = randint(100000, 999999);
+        #####
+
+        #####
+        create_table_query = '''SELECT * FROM Producto WHERE Nombre = %s;'''
+
+        cursor.execute(create_table_query, (nombreProducto.upper(),))
+
+        resultado = cursor.fetchall()
+
+        IDProducto = ""
+        precio =""
+        for row in resultado:
+            IDProducto = row[0]
+            precio = row[1]
+
+        if (len(IDProducto) < 1):
+            IDProducto = randint(100000, 999999);
+            precio ="5.00"
+        #####
+
+        total = float(cantidad)*float(precio)
+        tot = str(total)
+        print(tot)
+
+        NumFactura = randint(100000, 999999)
+        
+        direccion="ciudad"
+        create_table_query = '''INSERT INTO Compras(NumFactura, Sucursal, Cantidad, IDProducto, Total) VALUES(%s, %s, %s, %s, %s);'''
+                
+        cursor.execute(create_table_query, ("483939", str(sucursal), str(cantidad), IDProducto, str(tot)))
+
+        create_table_query = '''INSERT INTO Facturas(Nombre, NumFactura, Direccion, Sucursal, Fecha, Nit, IDVendedor) VALUES(%s, %s, %s, %s, %s, %s, %s);'''
+                
+        cursor.execute(create_table_query, (str(nombreCliente), str(NumFactura), direccion, str(sucursal), str(fecha), str(nit), IDVendedor))
+
+       
+        
+        connection.commit()
+                
+        messagebox.showinfo(message="Se ha registrado el factura exitosamente.", title="Registro")
+    except (Exception, psycopg2.DatabaseError) as error :
+        messagebox.showerror(message="No se pudo registrar la factura..", title="Registro fallido")
+        print ("No se pudo registrar producto.", error)
+    finally:
+        #closing database connection.
+            if(connection):
+                cursor.close()
+                connection.close()
+                print("PostgreSQL connection is closed")
 
 #FUNCIONES
 def mostrarVentanaClientes():
@@ -203,6 +472,14 @@ def mostrarVentanaClientes():
     
     nitFrame.pack(side=tk.TOP, anchor=tk.NW)
 
+    def borrarCampos1():
+        edit1.delete('1.0', 'end-1c')
+        edit2.delete('1.0', 'end-1c')
+        edit3.delete('1.0', 'end-1c')
+        edit4.delete('1.0', 'end-1c')
+        edit5.delete('1.0', 'end-1c')
+        edit6.delete('1.0', 'end-1c')
+        
     def registrarCliente():
         vNombre = edit1.get("1.0",'end-1c')
         vFecha = edit2.get("1.0",'end-1c')
@@ -213,6 +490,9 @@ def mostrarVentanaClientes():
 
         insertarCliente(vSexo, vNit, vTelefono, vDireccion, vNombre, vFecha)
 
+        borrarCampos1()
+
+
     #BOTONES
     registrarborrarFrame = tk.Frame(ventanaClientes, bg="dodger blue")
     
@@ -220,12 +500,31 @@ def mostrarVentanaClientes():
     button4.config(font=("Courier", 20))
     button4.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
 
-    button5 = tk.Button(registrarborrarFrame, text="BORRAR", command=registrarCliente, bg="red")
+    button5 = tk.Button(registrarborrarFrame, text="BORRAR", command=borrarCampos1, bg="red")
     button5.config(font=("Courier", 20))
     button5.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
     
     registrarborrarFrame.pack(side=tk.TOP, anchor=tk.NW)
 
+    buscarFrame = tk.Frame(ventanaClientes, bg="dodger blue")
+
+    label31 = tk.Label(buscarFrame, text="Buscar por nombre:", bg="dodger blue", fg="black")
+    label31.config(font=("Courier", 12))
+    label31.pack(side=tk.LEFT)
+
+    edit26 = tk.Text(buscarFrame, width=15, height=1)
+    edit26.pack(side=tk.LEFT)
+
+    def consultarCliente():
+        n = edit26.get("1.0",'end-1c')
+
+        buscarCliente(n)
+    
+    button12 = tk.Button(buscarFrame, text="BUSCAR", command=consultarCliente, bg="green")
+    button12.config(font=("Courier", 20))
+    button12.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
+    
+    buscarFrame.pack(side=tk.TOP, anchor=tk.NW)
 
 def mostrarVentanaProductos():
     ventanaProductos = tk.Tk()
@@ -289,6 +588,12 @@ def mostrarVentanaProductos():
     
     precioFrame.pack(side=tk.TOP, anchor=tk.NW)
 
+    def borrarCampos2():
+        edit7.delete('1.0', 'end-1c')
+        edit8.delete('1.0', 'end-1c')
+        edit9.delete('1.0', 'end-1c')
+        edit10.delete('1.0', 'end-1c')
+
     def registrarProducto():
         vNombre = edit7.get("1.0",'end-1c')
         vMarca = edit8.get("1.0",'end-1c')
@@ -296,7 +601,15 @@ def mostrarVentanaProductos():
         vPrecio = edit10.get("1.0",'end-1c')
 
         insertarProducto(vNombre, vPrecio, vMarca, vCategoria)
-        
+
+        borrarCampos2()
+
+    def borrarCampos1():
+        edit7.delete('1.0', 'end-1c')
+        edit8.delete('1.0', 'end-1c')
+        edit9.delete('1.0', 'end-1c')
+        edit10.delete('1.0', 'end-1c')
+
     #BOTONES
     registrarborrarFrame = tk.Frame(ventanaProductos, bg="dodger blue")
     
@@ -304,17 +617,39 @@ def mostrarVentanaProductos():
     button6.config(font=("Courier", 20))
     button6.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
 
-    button7 = tk.Button(registrarborrarFrame, text="BORRAR", command=mostrarVentanaClientes, bg="red")
+    button7 = tk.Button(registrarborrarFrame, text="BORRAR", command=borrarCampos2, bg="red")
     button7.config(font=("Courier", 20))
     button7.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
     
     registrarborrarFrame.pack(side=tk.TOP, anchor=tk.NW)
+
+    buscarFrame = tk.Frame(ventanaProductos, bg="dodger blue")
+
+    label30 = tk.Label(buscarFrame, text="Buscar por nombre:", bg="dodger blue", fg="black")
+    label30.config(font=("Courier", 12))
+    label30.pack(side=tk.LEFT)
+
+    edit25 = tk.Text(buscarFrame, width=15, height=1)
+    edit25.pack(side=tk.LEFT)
+
+    def consultarProducto():
+        n = edit25.get("1.0",'end-1c')
+        
+        buscarProducto(n)
+    
+    button11 = tk.Button(buscarFrame, text="BUSCAR", command=consultarProducto, bg="green")
+    button11.config(font=("Courier", 20))
+    button11.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
+    
+    buscarFrame.pack(side=tk.TOP, anchor=tk.NW)
 
 def mostrarVentanaVentas():
     ventanaVentas = tk.Tk()
     ventanaVentas.title("VENTAS")
     ventanaVentas.geometry("800x600")
     ventanaVentas.configure(background="dodger blue")
+
+    #nombreCliente, nit, fecha, sucursal, total, nombreVendedor, nombreProducto
     
     #LABELS
     label4 = tk.Label(ventanaVentas, text="VENTAS", bg="dodger blue", fg="black")
@@ -325,6 +660,25 @@ def mostrarVentanaVentas():
     label16.config(font=("Courier", 24))
     label16.pack(side=tk.TOP, anchor=tk.NW)
 
+    #PRODUCTOS
+    productosFrame = tk.Frame(ventanaVentas, bg="dodger blue")
+
+    label22 = tk.Label(productosFrame, text="Cantidad:", bg="dodger blue", fg="black")
+    label22.config(font=("Courier", 12))
+    label22.pack(side=tk.LEFT)
+
+    edit16 = tk.Text(productosFrame, width=10, height=1)
+    edit16.pack(side=tk.LEFT)
+
+    label23 = tk.Label(productosFrame, text="Nombre producto:", bg="dodger blue", fg="black")
+    label23.config(font=("Courier", 12))
+    label23.pack(side=tk.LEFT)
+
+    edit17 = tk.Text(productosFrame, width=35, height=1)
+    edit17.pack(side=tk.LEFT)
+    
+    productosFrame.pack(side=tk.TOP, anchor=tk.NW)
+    
     #NIT
     nitFrame = tk.Frame(ventanaVentas)
     
@@ -371,25 +725,79 @@ def mostrarVentanaVentas():
     
     vendedorFrame.pack(side=tk.TOP, anchor=tk.NW)
 
+    #VENDEDOR
+    sucursalFrame = tk.Frame(ventanaVentas)
     
+    label22 = tk.Label(sucursalFrame, text="Sucursal:", bg="dodger blue", fg="black")
+    label22.config(font=("Courier", 12))
+    label22.pack(side=tk.LEFT)
 
+    edit15 = tk.Text(sucursalFrame, width=40, height=1)
+    edit15.pack(side=tk.LEFT)
+    
+    sucursalFrame.pack(side=tk.TOP, anchor=tk.NW)
+
+    def borrarCampos3():
+        edit11.delete('1.0', 'end-1c')
+        edit12.delete('1.0', 'end-1c')
+        edit13.delete('1.0', 'end-1c')
+        edit14.delete('1.0', 'end-1c')
+        edit15.delete('1.0', 'end-1c')
+        edit16.delete('1.0', 'end-1c')
+        edit17.delete('1.0', 'end-1c')
+
+    def registrarVenta():
+        vNit = edit11.get("1.0",'end-1c')
+        vNombre = edit12.get("1.0",'end-1c')
+        vFecha = edit13.get("1.0",'end-1c')
+        vNombreVendedor = edit14.get("1.0",'end-1c')
+        vSucursal = edit15.get("1.0",'end-1c')
+        vCantidad = edit16.get("1.0",'end-1c')
+        vNombreProducto = edit17.get("1.0",'end-1c')
+        
+        insertarFacturaCompra(vNit, vNombre, vFecha, vSucursal,vNombreVendedor, vSucursal, vCantidad, vNombreProducto)
+
+        borrarCampos3()
+    
     #BOTONES
     registrarborrarFrame = tk.Frame(ventanaVentas, bg="dodger blue")
     
-    button8 = tk.Button(registrarborrarFrame, text="REGISTRAR", command=mostrarVentanaClientes, bg="green")
+    button8 = tk.Button(registrarborrarFrame, text="REGISTRAR", command=registrarVenta, bg="green")
     button8.config(font=("Courier", 20))
     button8.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
 
-    button9 = tk.Button(registrarborrarFrame, text="BORRAR", command=mostrarVentanaClientes, bg="red")
+    button9 = tk.Button(registrarborrarFrame, text="BORRAR", command=borrarCampos3, bg="red")
     button9.config(font=("Courier", 20))
     button9.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
     
     registrarborrarFrame.pack(side=tk.TOP, anchor=tk.NW)
     
+    buscarFrame = tk.Frame(ventanaVentas, bg="dodger blue")
+    
+    label32 = tk.Label(buscarFrame, text="Buscar por nombre:", bg="dodger blue", fg="black")
+    label32.config(font=("Courier", 12))
+    label32.pack(side=tk.LEFT)
+
+    edit27 = tk.Text(buscarFrame, width=15, height=1)
+    edit27.pack(side=tk.LEFT)
+
+    def consultarFactura():
+        n = edit27.get("1.0",'end-1c')
+        
+        buscarFactura(n)
+    
+    button16 = tk.Button(buscarFrame, text="BUSCAR", command=consultarFactura, bg="green")
+    button16.config(font=("Courier", 20))
+    button16.pack(side=tk.LEFT, padx=20, pady=10, ipadx=8)
+    
+    buscarFrame.pack(side=tk.TOP, anchor=tk.NW)
+    
 
 ################################################################################
 #                                    MAIN                                      #
 ################################################################################
+#Simulacion
+#simulacionCompras(10000,"2019/05/16")
 #GUI
 gui = tk.Tk()
 gui.title("TIENDA LA BENDICION")
