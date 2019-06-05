@@ -164,7 +164,7 @@ try:
     """
     
     #Factura
-    for i in range(0,5):
+    for i in range(25000,1000000):
         idCliente=random.randint(10000001,10000050)
         idAusar=f"'{idCliente}'"
         query=f'''Select nombre From Cliente Where Nit ='{idCliente}' '''
@@ -185,7 +185,7 @@ try:
         IDVendedor='100000001'
         query=f'''INSERT INTO Facturas(Nombre,NumFactura,Direccion,Sucursal,Fecha,Nit,IDVendedor) VALUES('{nombre}','{idFactura}','{direccion}','{suc}','{fecha}','{idCliente}','{IDVendedor}')'''
         cursor.execute(query)
-        cantProductosFactura=random.randint(1,5)
+        cantProductosFactura=random.randint(1,3)
         for i in range (0,cantProductosFactura-1):
             cantidad=random.randint(1,5)
             IDProducto=random.randint(10000000,10000049)
@@ -197,7 +197,8 @@ try:
             total=cantidad*precio
             query=f'''INSERT INTO Compras(NumFactura,Cantidad,IDproducto,Total) VALUES('{idFactura}','{cantidad}','{IDProducto}','{total}')'''
             cursor.execute(query)
-    connection.commit()
+        connection.commit()
+    
     
 except (Exception, psycopg2.DatabaseError) as error :
     print ("No se pudo registrar debido a que ", error)
